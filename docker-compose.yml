@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      API_BASE_URL: http://localhost:8080
+      # NG_ALLOWED_HOSTS is read at runtime by @angular/ssr (SSRF guard on the
+      # Host header) without needing a rebuild; extend this list per environment.
+      NG_ALLOWED_HOSTS: localhost:4000,localhost
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    external: true
+    name: ecommerce-network
