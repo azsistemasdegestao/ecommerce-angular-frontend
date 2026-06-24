@@ -81,7 +81,7 @@ export class ProductDetailComponent implements OnInit {
   async addToCart(): Promise<void> {
     const product = this.catalogService.currentProduct();
     if (!product || !product.in_stock) return;
-    await this.cartService.addItem(
+    const added = await this.cartService.addItem(
       {
         id: product.id,
         name: product.name,
@@ -91,7 +91,9 @@ export class ProductDetailComponent implements OnInit {
       },
       this.quantity(),
     );
-    this.toastService.show('success', `${product.name} added to your cart.`);
-    this.quantity.set(1);
+    if (added) {
+      this.toastService.show('success', `${product.name} added to your cart.`);
+      this.quantity.set(1);
+    }
   }
 }

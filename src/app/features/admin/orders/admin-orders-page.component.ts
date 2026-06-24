@@ -8,13 +8,11 @@ import { PaginationComponent } from '../../../shared/pagination/pagination.compo
   selector: 'app-admin-orders-page',
   imports: [AdminOrderTableComponent, AdminOrderFilterBarComponent, PaginationComponent],
   template: `
-    <div class="p-4 lg:p-6">
-      <h1 class="mb-4 text-xl font-semibold">Orders</h1>
-
+    <div>
       <app-admin-order-filter-bar (filtersChange)="onFiltersChange($event)" />
 
       @if (!adminOrderService.isLoading() && adminOrderService.orders().length === 0) {
-        <p class="mt-6 text-gray-600">No orders match the current filters.</p>
+        <p class="mt-6 text-graphite-muted">No orders match the current filters.</p>
       } @else {
         <div class="mt-4 overflow-x-auto">
           <app-admin-order-table [orders]="adminOrderService.orders()" />

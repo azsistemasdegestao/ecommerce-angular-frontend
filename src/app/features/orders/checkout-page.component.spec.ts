@@ -5,6 +5,7 @@ import { Router, provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CheckoutPageComponent } from './checkout-page.component';
 import { CartService } from '../cart/cart.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { provideApiConfiguration } from '../../core/api/generated/api-configuration';
 import { environment } from '../../../environments/environment';
 
@@ -24,6 +25,7 @@ describe('CheckoutPageComponent', () => {
         provideHttpClientTesting(),
         provideApiConfiguration(environment.apiBaseUrl),
         provideRouter([]),
+        { provide: AuthService, useValue: { isAuthenticated: () => true } },
       ],
     }).compileComponents();
 

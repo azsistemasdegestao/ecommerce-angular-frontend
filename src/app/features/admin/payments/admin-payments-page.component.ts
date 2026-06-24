@@ -9,11 +9,9 @@ import { ToastService } from '../../../shared/toast/toast.service';
   selector: 'app-admin-payments-page',
   imports: [AdminPaymentTableComponent, RefundConfirmModalComponent, PaginationComponent],
   template: `
-    <div class="p-4 lg:p-6">
-      <h1 class="mb-4 text-xl font-semibold">Payments</h1>
-
+    <div>
       @if (!adminPaymentService.isLoading() && adminPaymentService.payments().length === 0) {
-        <p class="text-gray-600">No payments registered yet.</p>
+        <p class="text-graphite-muted">No payments registered yet.</p>
       } @else {
         <div class="overflow-x-auto">
           <app-admin-payment-table

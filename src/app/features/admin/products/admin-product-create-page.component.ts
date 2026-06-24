@@ -9,8 +9,7 @@ import { ToastService } from '../../../shared/toast/toast.service';
   selector: 'app-admin-product-create-page',
   imports: [ProductFormComponent],
   template: `
-    <div class="max-w-xl p-4 lg:p-6">
-      <h1 class="mb-4 text-xl font-semibold">New product</h1>
+    <div class="max-w-xl">
       <app-product-form
         [categories]="catalogService.categories()"
         [saving]="adminProductService.isSaving()"

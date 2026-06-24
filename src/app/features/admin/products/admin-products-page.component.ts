@@ -11,9 +11,8 @@ import { ToastService } from '../../../shared/toast/toast.service';
   selector: 'app-admin-products-page',
   imports: [RouterLink, AdminProductTableComponent, PaginationComponent, ButtonComponent, ModalComponent],
   template: `
-    <div class="p-4 lg:p-6">
-      <div class="mb-4 flex items-center justify-between">
-        <h1 class="text-xl font-semibold">Products</h1>
+    <div>
+      <div class="mb-4 flex justify-end">
         <a routerLink="/admin/products/new">
           <app-button>New product</app-button>
         </a>
@@ -21,7 +20,7 @@ import { ToastService } from '../../../shared/toast/toast.service';
 
       @if (!adminProductService.isLoading() && adminProductService.products().length === 0) {
         <div class="flex flex-col items-center gap-4 py-12 text-center">
-          <p class="text-gray-600">No products registered yet.</p>
+          <p class="text-graphite-muted">No products registered yet.</p>
           <a routerLink="/admin/products/new">
             <app-button>Create first product</app-button>
           </a>

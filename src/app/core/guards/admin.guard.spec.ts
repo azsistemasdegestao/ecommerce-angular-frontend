@@ -49,12 +49,15 @@ describe('adminGuard', () => {
     });
     await promise;
 
-    const result = TestBed.runInInjectionContext(() =>
+    const resultPromise = TestBed.runInInjectionContext(() =>
       adminGuard({} as never, { url: '/admin/products' } as never),
     );
 
-    expect(authService.currentUser()?.role).toBe('Customer');
+    httpMock.expectOne(`${API}/api/v1/auth/logout`).flush({});
+    const result = await resultPromise;
+
+    expect(authService.currentUser()).toBeNull();
     expect(result).not.toBe(true);
-    expect(router.serializeUrl(result as UrlTree)).toBe('/');
+    expect(router.serializeUrl(result as UrlTree)).toBe('/login?returnUrl=%2Fadmin%2Fproducts&adminRequired=1');
   });
 });

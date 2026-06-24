@@ -51,11 +51,18 @@ export class LoginPageComponent {
 
   protected readonly isSubmitting = signal(false);
   protected readonly errorMessage = signal('');
-  protected readonly infoMessage = signal(
-    this.route.snapshot.queryParamMap.get('registered') === '1'
-      ? 'Account created, please log in.'
-      : '',
-  );
+  protected readonly infoMessage = signal(this.computeInfoMessage());
+
+  private computeInfoMessage(): string {
+    const params = this.route.snapshot.queryParamMap;
+    if (params.get('adminRequired') === '1') {
+      return 'Please log in with an administrator account.';
+    }
+    if (params.get('registered') === '1') {
+      return 'Account created, please log in.';
+    }
+    return '';
+  }
 
   protected readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],

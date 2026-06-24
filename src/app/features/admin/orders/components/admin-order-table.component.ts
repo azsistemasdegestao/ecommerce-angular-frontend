@@ -9,7 +9,7 @@ import { OrderStatusBadgeComponent } from '../../../orders/components/order-stat
   imports: [DatePipe, DecimalPipe, RouterLink, OrderStatusBadgeComponent],
   template: `
     <table class="w-full min-w-[640px] table-auto text-left text-sm">
-      <thead class="border-b border-gray-200 text-gray-500">
+      <thead class="border-b border-charcoal/10 text-graphite-muted">
         <tr>
           <th class="py-2">Order</th>
           <th class="py-2">User</th>
@@ -20,16 +20,16 @@ import { OrderStatusBadgeComponent } from '../../../orders/components/order-stat
       </thead>
       <tbody>
         @for (order of orders; track order.id) {
-          <tr class="border-b border-gray-100">
+          <tr class="border-b border-charcoal/5">
             <td class="py-2">
-              <a class="text-blue-600 hover:underline" [routerLink]="['/admin/orders', order.id]">
+              <a class="text-champagne hover:underline" [routerLink]="['/admin/orders', order.id]">
                 {{ order.id.slice(0, 8) }}
               </a>
             </td>
             <td class="py-2">{{ order.user_email }}</td>
             <td class="py-2"><app-order-status-badge [status]="order.status" /></td>
             <td class="py-2">{{ order.total | number: '1.2-2' }}</td>
-            <td class="py-2 text-gray-500">{{ order.created_at | date: 'mediumDate' }}</td>
+            <td class="py-2 text-graphite-muted">{{ order.created_at | date: 'mediumDate' }}</td>
           </tr>
         }
       </tbody>

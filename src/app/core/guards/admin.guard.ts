@@ -16,5 +16,9 @@ export const adminGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  return router.createUrlTree(['/']);
+  const redirect = router.createUrlTree(['/login'], {
+    queryParams: { returnUrl: state.url, adminRequired: 1 },
+  });
+
+  return authService.logout().then(() => redirect);
 };
