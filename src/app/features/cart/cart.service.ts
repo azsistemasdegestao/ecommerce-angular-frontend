@@ -125,7 +125,7 @@ export class CartService {
     try {
       const resp = await firstValueFrom(
         addItemToCart(this.http, this.apiConfig.rootUrl, {
-          body: { product_id: product.id, quantity: existing ? Number(existing.quantity) + quantity : quantity },
+          body: { product_id: product.id, quantity },
         }),
       );
       const body = resp.body!;

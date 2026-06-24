@@ -180,4 +180,33 @@ describe('CartService', () => {
     expect(service.cart().items.length).toBe(1);
     expect(service.cart().items[0].quantity).toBe(2);
   });
+
+  it('AC-FE-CART-U-08: adding an already-present product sends only the added delta, not the running total (backend sums it server-side)', async () => {
+    const firstAdd = service.addItem(PRODUCT, 1);
+    httpMock.expectOne(`${API}/api/v1/cart/items`).flush({
+      cart_id: 'cart-1',
+      item_id: 'item-1',
+      product_id: 'p1',
+      quantity: 1,
+      unit_price: 49.9,
+      subtotal: 49.9,
+    });
+    await firstAdd;
+
+    const secondAdd = service.addItem(PRODUCT, 3);
+    const req = httpMock.expectOne(`${API}/api/v1/cart/items`);
+    expect(req.request.body).toEqual({ product_id: 'p1', quantity: 3 });
+
+    req.flush({
+      cart_id: 'cart-1',
+      item_id: 'item-1',
+      product_id: 'p1',
+      quantity: 4,
+      unit_price: 49.9,
+      subtotal: 199.6,
+    });
+    await secondAdd;
+
+    expect(service.cart().items[0].quantity).toBe(4);
+  });
 });
