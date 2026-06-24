@@ -10,18 +10,18 @@ import { InputComponent } from '../../shared/input/input.component';
   selector: 'app-forgot-password-page',
   imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
   template: `
-    <div class="mx-auto max-w-sm p-6">
-      <h1 class="mb-6 text-xl font-semibold">Forgot password</h1>
+    <div class="mx-auto max-w-sm p-8 md:p-10">
+      <h1 class="mb-6 font-display text-2xl italic text-charcoal">Forgot password</h1>
 
       @if (errorMessage()) {
-        <p class="mb-4 text-sm text-red-600" role="alert">{{ errorMessage() }}</p>
+        <p class="mb-4 text-sm text-red-700" role="alert">{{ errorMessage() }}</p>
       }
 
       @if (submitted()) {
-        <p class="mb-4 text-sm text-green-700" role="status">
+        <p class="mb-4 text-sm text-emerald-700" role="status">
           If that email exists, you'll receive instructions to reset your password.
         </p>
-        <a class="text-sm text-blue-600 hover:underline" routerLink="/login">Back to login</a>
+        <a class="text-sm text-champagne hover:underline" routerLink="/login">Back to login</a>
       } @else {
         <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="submit()">
           <app-input label="Email" type="email" formControlName="email" [errorMessage]="emailError()" />

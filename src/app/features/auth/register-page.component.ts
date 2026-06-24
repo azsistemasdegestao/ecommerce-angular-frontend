@@ -16,11 +16,11 @@ function passwordsMatchValidator(control: AbstractControl): ValidationErrors | n
   selector: 'app-register-page',
   imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
   template: `
-    <div class="mx-auto max-w-sm p-6">
-      <h1 class="mb-6 text-xl font-semibold">Create account</h1>
+    <div class="mx-auto max-w-sm p-8 md:p-10">
+      <h1 class="mb-6 font-display text-2xl italic text-charcoal">Create account</h1>
 
       @if (errorMessage()) {
-        <p class="mb-4 text-sm text-red-600" role="alert">{{ errorMessage() }}</p>
+        <p class="mb-4 text-sm text-red-700" role="alert">{{ errorMessage() }}</p>
       }
 
       <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="submit()">
@@ -42,9 +42,9 @@ function passwordsMatchValidator(control: AbstractControl): ValidationErrors | n
         <app-button type="submit" [loading]="isSubmitting()">Create account</app-button>
       </form>
 
-      <p class="mt-4 text-sm">
+      <p class="mt-4 text-sm text-graphite-muted">
         Already have an account?
-        <a class="text-blue-600 hover:underline" routerLink="/login">Log in</a>
+        <a class="text-champagne hover:underline" routerLink="/login">Log in</a>
       </p>
     </div>
   `,

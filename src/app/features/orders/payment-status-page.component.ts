@@ -15,7 +15,7 @@ import { PaymentTimeoutStateComponent } from './payment-components/payment-timeo
     PaymentTimeoutStateComponent,
   ],
   template: `
-    <div class="mx-auto max-w-md p-4 md:p-6">
+    <div class="mx-auto max-w-md p-6 md:p-10">
       @switch (paymentService.pollingState()) {
         @case ('timed_out') {
           <app-payment-timeout-state [checking]="isChecking()" (checkNow)="checkNow()" />

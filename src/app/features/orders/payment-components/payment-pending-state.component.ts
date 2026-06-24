@@ -7,7 +7,7 @@ import { SpinnerComponent } from '../../../shared/spinner/spinner.component';
   template: `
     <div class="flex flex-col items-center gap-4 py-12 text-center">
       <app-spinner [size]="40" />
-      <p class="text-gray-700">Processing your payment...</p>
+      <p class="text-graphite-muted">Processing your payment...</p>
     </div>
   `,
 })

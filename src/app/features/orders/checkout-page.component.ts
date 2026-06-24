@@ -11,11 +11,11 @@ import { ButtonComponent } from '../../shared/button/button.component';
   selector: 'app-checkout-page',
   imports: [ReactiveFormsModule, OrderSummaryComponent, InputComponent, ButtonComponent],
   template: `
-    <div class="mx-auto max-w-xl p-4 md:p-6">
-      <h1 class="mb-4 text-xl font-semibold">Checkout</h1>
+    <div class="mx-auto max-w-xl p-6 md:p-10">
+      <h1 class="mb-6 font-display text-2xl italic text-charcoal">Checkout</h1>
 
       @if (errorMessage()) {
-        <p class="mb-4 text-sm text-red-600" role="alert">{{ errorMessage() }}</p>
+        <p class="mb-4 text-sm text-red-700" role="alert">{{ errorMessage() }}</p>
       }
 
       <app-order-summary

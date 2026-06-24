@@ -29,26 +29,26 @@ const STATUS_OPTIONS: SelectOption[] = [
     PaginationComponent,
   ],
   template: `
-    <div class="mx-auto max-w-3xl p-4 md:p-6">
-      <h1 class="mb-4 text-xl font-semibold">Your orders</h1>
+    <div class="mx-auto max-w-3xl p-6 md:p-10">
+      <h1 class="mb-6 font-display text-2xl italic text-charcoal">Your orders</h1>
 
       <app-select label="Status" [options]="statusOptions" [formControl]="statusControl" />
 
       @if (!orderService.isLoading() && orderService.orders().length === 0) {
         <div class="flex flex-col items-center gap-4 py-12 text-center">
-          <p class="text-gray-600">You don't have any orders yet.</p>
-          <a class="text-blue-600 hover:underline" routerLink="/">Browse the catalog</a>
+          <p class="text-graphite-muted">You don't have any orders yet.</p>
+          <a class="text-champagne hover:underline" routerLink="/">Browse the catalog</a>
         </div>
       } @else {
         <div class="mt-4 flex flex-col gap-2">
           @for (order of orderService.orders(); track order.id) {
             <a
               [routerLink]="['/orders', order.id]"
-              class="flex items-center justify-between rounded-md border border-gray-200 p-3 hover:bg-gray-50"
+              class="flex items-center justify-between rounded-sm border border-charcoal/10 p-3 transition-colors hover:bg-charcoal/5"
             >
-              <span class="text-sm text-gray-600">{{ order.created_at | date: 'mediumDate' }}</span>
+              <span class="text-sm text-graphite-muted">{{ order.created_at | date: 'mediumDate' }}</span>
               <app-order-status-badge [status]="order.status" />
-              <span class="text-sm font-semibold">{{ order.total | number: '1.2-2' }}</span>
+              <span class="text-sm font-medium text-champagne">{{ order.total | number: '1.2-2' }}</span>
             </a>
           }
         </div>

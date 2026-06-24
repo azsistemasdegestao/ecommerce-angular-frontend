@@ -37,7 +37,7 @@ describe('App', () => {
     fixture.detectChanges();
 
     const el: HTMLElement = fixture.nativeElement;
-    expect(el.textContent).not.toContain('Cart');
+    expect(el.querySelector('[aria-label="Cart"]')).toBeNull();
     expect(el.querySelector('app-cart-drawer')).toBeNull();
   });
 
@@ -49,6 +49,6 @@ describe('App', () => {
     fixture.detectChanges();
 
     const el: HTMLElement = fixture.nativeElement;
-    expect(el.textContent).toContain('Cart');
+    expect(el.querySelector('[aria-label="Cart"]')).not.toBeNull();
   });
 });

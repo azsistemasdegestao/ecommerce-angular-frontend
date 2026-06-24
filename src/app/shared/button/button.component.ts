@@ -4,10 +4,10 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300',
-  secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 disabled:bg-gray-100',
-  danger: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300',
-  ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 disabled:text-gray-400',
+  primary: 'bg-charcoal text-cream hover:bg-champagne hover:text-charcoal disabled:bg-charcoal/40 transition-colors duration-300',
+  secondary: 'bg-transparent border border-charcoal/30 text-charcoal hover:border-champagne hover:text-champagne disabled:opacity-40 transition-colors duration-300',
+  danger: 'bg-red-700 text-white hover:bg-red-800 disabled:bg-red-300',
+  ghost: 'bg-transparent text-graphite-muted hover:bg-charcoal/5 hover:text-charcoal disabled:text-charcoal/30 transition-colors duration-300',
 };
 
 @Component({
@@ -15,7 +15,7 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   imports: [SpinnerComponent],
   template: `
     <button
-      class="inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed"
+      class="inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2 text-sm font-medium disabled:cursor-not-allowed"
       [class]="variantClasses"
       [type]="type"
       [disabled]="disabled || loading"

@@ -20,7 +20,7 @@ let nextId = 0;
   template: `
     <div class="flex flex-col gap-1">
       @if (label) {
-        <label [for]="id" class="text-sm font-medium text-gray-700">{{ label }}</label>
+        <label [for]="id" class="text-xs font-medium uppercase tracking-wide text-graphite-muted">{{ label }}</label>
       }
       <select
         [id]="id"
@@ -28,16 +28,15 @@ let nextId = 0;
         [disabled]="disabled"
         (change)="onSelect($event)"
         (blur)="onTouched()"
-        class="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-        [class.border-red-500]="errorMessage"
-        [class.border-gray-300]="!errorMessage"
+        class="rounded-sm border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-champagne focus:border-champagne disabled:bg-charcoal/5"
+        [class]="borderClass"
       >
         @for (option of options; track option.value) {
           <option [value]="option.value">{{ option.label }}</option>
         }
       </select>
       @if (errorMessage) {
-        <span class="text-sm text-red-600">{{ errorMessage }}</span>
+        <span class="text-sm text-red-700">{{ errorMessage }}</span>
       }
     </div>
   `,
@@ -50,6 +49,10 @@ export class SelectComponent implements ControlValueAccessor {
   readonly id = `app-select-${nextId++}`;
   value = '';
   disabled = false;
+
+  protected get borderClass(): string {
+    return this.errorMessage ? 'border-red-500' : 'border-charcoal/20';
+  }
 
   private onChange: (value: string) => void = () => {};
   onTouched: () => void = () => {};

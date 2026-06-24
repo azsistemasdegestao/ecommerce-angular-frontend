@@ -7,35 +7,35 @@ import { ButtonComponent } from '../../../shared/button/button.component';
   selector: 'app-cart-item-row',
   imports: [DecimalPipe, ButtonComponent],
   template: `
-    <div class="flex items-center gap-3 border-b border-gray-100 py-3">
-      <img [src]="item.image_url" [alt]="item.product_name" class="h-16 w-16 rounded-md object-cover" />
+    <div class="flex items-center gap-4 border-b border-charcoal/10 py-4">
+      <img [src]="item.image_url" [alt]="item.product_name" class="h-16 w-16 rounded-sm bg-cream object-cover" />
       <div class="flex-1">
-        <p class="text-sm font-medium text-gray-900">{{ item.product_name }}</p>
-        <p class="text-sm text-gray-500">{{ item.unit_price | number: '1.2-2' }}</p>
+        <p class="font-display text-base text-charcoal">{{ item.product_name }}</p>
+        <p class="text-sm text-graphite-muted">{{ item.unit_price | number: '1.2-2' }}</p>
         @if (errorMessage) {
-          <p class="text-sm text-red-600" role="alert">{{ errorMessage }}</p>
+          <p class="text-sm text-red-700" role="alert">{{ errorMessage }}</p>
         }
       </div>
       <div class="flex items-center gap-2">
         <button
           type="button"
-          class="rounded-md border px-2 py-1 text-sm disabled:opacity-50"
+          class="rounded-sm border border-charcoal/20 px-2 py-1 text-sm text-charcoal transition-colors hover:border-champagne hover:text-champagne disabled:opacity-50"
           [disabled]="pending || Number(item.quantity) <= 1"
           (click)="quantityChange.emit(Number(item.quantity) - 1)"
         >
           -
         </button>
-        <span class="w-6 text-center text-sm">{{ item.quantity }}</span>
+        <span class="w-6 text-center text-sm text-charcoal">{{ item.quantity }}</span>
         <button
           type="button"
-          class="rounded-md border px-2 py-1 text-sm disabled:opacity-50"
+          class="rounded-sm border border-charcoal/20 px-2 py-1 text-sm text-charcoal transition-colors hover:border-champagne hover:text-champagne disabled:opacity-50"
           [disabled]="pending"
           (click)="quantityChange.emit(Number(item.quantity) + 1)"
         >
           +
         </button>
       </div>
-      <p class="w-20 text-right text-sm font-semibold">{{ item.subtotal | number: '1.2-2' }}</p>
+      <p class="w-20 text-right text-sm font-medium text-champagne">{{ item.subtotal | number: '1.2-2' }}</p>
       <app-button variant="ghost" [disabled]="pending" (click)="remove.emit()">Remove</app-button>
     </div>
   `,

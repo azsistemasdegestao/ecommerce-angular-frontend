@@ -15,18 +15,18 @@ export interface OrderSummaryItem {
   template: `
     <div class="flex flex-col gap-3">
       @for (item of items; track item.id) {
-        <div class="flex justify-between text-sm">
+        <div class="flex justify-between text-sm text-charcoal">
           <span>{{ item.product_name }} × {{ item.quantity }}</span>
-          <span>{{ item.subtotal | number: '1.2-2' }}</span>
+          <span class="text-champagne">{{ item.subtotal | number: '1.2-2' }}</span>
         </div>
       }
-      <div class="flex justify-between border-t border-gray-200 pt-2 text-base font-semibold">
+      <div class="flex justify-between border-t border-charcoal/10 pt-2 text-base font-medium text-charcoal">
         <span>Total</span>
-        <span>{{ total | number: '1.2-2' }}</span>
+        <span class="text-champagne">{{ total | number: '1.2-2' }}</span>
       </div>
       @if (shippingAddress) {
-        <div class="border-t border-gray-200 pt-2 text-sm text-gray-600">
-          <p class="font-medium text-gray-900">Shipping address</p>
+        <div class="border-t border-charcoal/10 pt-2 text-sm text-graphite-muted">
+          <p class="font-medium text-charcoal">Shipping address</p>
           <p>{{ shippingAddress }}</p>
         </div>
       }

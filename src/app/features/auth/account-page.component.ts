@@ -7,17 +7,17 @@ import { ButtonComponent } from '../../shared/button/button.component';
   selector: 'app-account-page',
   imports: [ButtonComponent],
   template: `
-    <div class="mx-auto max-w-sm p-6">
-      <h1 class="mb-6 text-xl font-semibold">Account</h1>
+    <div class="mx-auto max-w-sm p-8 md:p-10">
+      <h1 class="mb-6 font-display text-2xl italic text-charcoal">Account</h1>
 
       @if (currentUser(); as user) {
-        <dl class="mb-6 flex flex-col gap-2 text-sm">
+        <dl class="mb-6 flex flex-col gap-2 text-sm text-charcoal">
           <div>
-            <dt class="text-gray-500">Email</dt>
+            <dt class="text-graphite-muted">Email</dt>
             <dd>{{ user.email }}</dd>
           </div>
           <div>
-            <dt class="text-gray-500">Role</dt>
+            <dt class="text-graphite-muted">Role</dt>
             <dd>{{ user.role }}</dd>
           </div>
         </dl>

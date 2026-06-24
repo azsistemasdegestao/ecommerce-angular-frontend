@@ -1,15 +1,11 @@
 @if (!isAdminRoute()) {
-  <button
-    type="button"
-    class="fixed right-4 top-4 z-20 rounded-full bg-blue-600 px-4 py-2 text-sm text-white shadow-lg"
-    (click)="cartService.toggleDrawer()"
-  >
-    Cart ({{ cartService.cart().item_count }})
-  </button>
+  <app-navbar />
 }
 
 <router-outlet />
+
 @if (!isAdminRoute()) {
+  <app-footer />
   <app-cart-drawer />
 }
 <app-toast />

@@ -10,14 +10,14 @@ import { InputComponent } from '../../shared/input/input.component';
   selector: 'app-login-page',
   imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
   template: `
-    <div class="mx-auto max-w-sm p-6">
-      <h1 class="mb-6 text-xl font-semibold">Log in</h1>
+    <div class="mx-auto max-w-sm p-8 md:p-10">
+      <h1 class="mb-6 font-display text-2xl italic text-charcoal">Log in</h1>
 
       @if (infoMessage()) {
-        <p class="mb-4 text-sm text-green-700">{{ infoMessage() }}</p>
+        <p class="mb-4 text-sm text-emerald-700">{{ infoMessage() }}</p>
       }
       @if (errorMessage()) {
-        <p class="mb-4 text-sm text-red-600" role="alert">{{ errorMessage() }}</p>
+        <p class="mb-4 text-sm text-red-700" role="alert">{{ errorMessage() }}</p>
       }
 
       <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="submit()">
@@ -37,8 +37,8 @@ import { InputComponent } from '../../shared/input/input.component';
       </form>
 
       <div class="mt-4 flex justify-between text-sm">
-        <a class="text-blue-600 hover:underline" routerLink="/register">Create account</a>
-        <a class="text-blue-600 hover:underline" routerLink="/forgot-password">Forgot password?</a>
+        <a class="text-champagne hover:underline" routerLink="/register">Create account</a>
+        <a class="text-champagne hover:underline" routerLink="/forgot-password">Forgot password?</a>
       </div>
     </div>
   `,

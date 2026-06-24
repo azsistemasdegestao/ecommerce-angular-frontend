@@ -9,32 +9,38 @@ import { ButtonComponent } from '../../../shared/button/button.component';
   imports: [DecimalPipe, RouterLink, ButtonComponent],
   template: `
     @if (cartService.isDrawerOpen()) {
-      <div class="fixed inset-0 z-30 bg-black/40" (click)="cartService.closeDrawer()"></div>
-      <aside class="fixed right-0 top-0 z-40 flex h-full w-80 flex-col gap-4 bg-white p-4 shadow-xl">
+      <div class="fixed inset-0 z-30 bg-charcoal/60" (click)="cartService.closeDrawer()"></div>
+      <aside class="fixed right-0 top-0 z-40 flex h-full w-80 flex-col gap-4 bg-surface p-6 shadow-xl">
         <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold">Cart</h2>
-          <button type="button" class="text-gray-500" (click)="cartService.closeDrawer()">Close</button>
+          <h2 class="font-display text-lg italic text-charcoal">Cart</h2>
+          <button type="button" class="text-graphite-muted hover:text-charcoal" (click)="cartService.closeDrawer()">
+            Close
+          </button>
         </div>
 
         @if (cartService.isEmpty()) {
-          <p class="text-sm text-gray-600">Your cart is empty.</p>
+          <p class="text-sm text-graphite-muted">Your cart is empty.</p>
         } @else {
           <ul class="flex-1 overflow-y-auto">
             @for (item of cartService.cart().items; track item.id) {
-              <li class="flex justify-between border-b border-gray-100 py-2 text-sm">
+              <li class="flex justify-between border-b border-charcoal/10 py-2 text-sm text-charcoal">
                 <span>{{ item.product_name }} × {{ item.quantity }}</span>
-                <span>{{ item.subtotal | number: '1.2-2' }}</span>
+                <span class="text-champagne">{{ item.subtotal | number: '1.2-2' }}</span>
               </li>
             }
           </ul>
-          <div class="flex justify-between text-base font-semibold">
+          <div class="flex justify-between text-base font-medium text-charcoal">
             <span>Total</span>
-            <span>{{ cartService.cart().total | number: '1.2-2' }}</span>
+            <span class="text-champagne">{{ cartService.cart().total | number: '1.2-2' }}</span>
           </div>
           <app-button (click)="goToCheckout()">Go to checkout</app-button>
         }
 
-        <a class="text-center text-sm text-blue-600 hover:underline" routerLink="/cart" (click)="cartService.closeDrawer()">
+        <a
+          class="text-center text-sm text-champagne hover:underline"
+          routerLink="/cart"
+          (click)="cartService.closeDrawer()"
+        >
           View full cart
         </a>
       </aside>

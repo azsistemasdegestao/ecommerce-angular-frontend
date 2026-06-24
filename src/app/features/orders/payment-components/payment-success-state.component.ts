@@ -6,12 +6,12 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   template: `
     <div class="flex flex-col items-center gap-4 py-12 text-center">
-      <div class="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl text-green-600">
+      <div class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-3xl text-emerald-700">
         ✓
       </div>
-      <h2 class="text-lg font-semibold">Payment confirmed</h2>
-      <p class="text-gray-600">Your payment was processed successfully.</p>
-      <a class="text-blue-600 hover:underline" [routerLink]="['/orders', orderId]">View order</a>
+      <h2 class="font-display text-lg italic text-charcoal">Payment confirmed</h2>
+      <p class="text-graphite-muted">Your payment was processed successfully.</p>
+      <a class="text-champagne hover:underline" [routerLink]="['/orders', orderId]">View order</a>
     </div>
   `,
 })
