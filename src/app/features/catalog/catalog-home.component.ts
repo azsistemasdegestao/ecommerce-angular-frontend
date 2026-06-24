@@ -13,7 +13,7 @@ import { PaginationComponent } from '../../shared/pagination/pagination.componen
   imports: [ProductGridComponent, FilterBarComponent, CategoryNavComponent, HeroComponent, PaginationComponent],
   template: `
     <app-hero />
-    <div class="mx-auto flex max-w-7xl flex-col gap-8 p-6 md:flex-row md:gap-12 md:p-10 lg:p-16">
+    <div class="flex flex-col gap-8 p-6 md:flex-row md:gap-12 md:p-10 lg:p-16">
       <aside class="md:w-48">
         <app-category-nav [categories]="catalogService.categories()" />
       </aside>

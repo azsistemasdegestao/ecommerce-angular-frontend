@@ -16,7 +16,7 @@ import { ToastService } from '../../shared/toast/toast.service';
         <a class="text-champagne hover:underline" routerLink="/">Back to catalog</a>
       </div>
     } @else if (catalogService.currentProduct(); as product) {
-      <div class="mx-auto grid max-w-7xl gap-10 p-6 md:grid-cols-2 md:gap-16 md:p-10 lg:p-16">
+      <div class="grid gap-10 p-6 md:grid-cols-2 md:gap-16 md:p-10 lg:p-16">
         <img
           [src]="product.image_url"
           [alt]="product.name"

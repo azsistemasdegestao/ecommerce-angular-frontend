@@ -7,7 +7,7 @@ import { CatalogService } from '../../features/catalog/catalog.service';
   imports: [RouterLink],
   template: `
     <footer class="bg-charcoal text-cream">
-      <div class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-16 md:grid-cols-4 md:px-10">
+      <div class="grid grid-cols-1 gap-10 px-6 py-16 md:grid-cols-4 md:px-10 lg:px-16">
         <div class="flex flex-col gap-4">
           <span class="font-display text-xl italic">Maison</span>
           <p class="text-sm text-cream/60">Timeless pieces, curated for you.</p>
@@ -57,8 +57,8 @@ import { CatalogService } from '../../features/catalog/catalog.service';
         </div>
       </div>
 
-      <div class="border-t border-cream/10 px-6 py-10 md:px-10">
-        <div class="mx-auto flex max-w-7xl flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+      <div class="border-t border-cream/10 px-6 py-10 md:px-10 lg:px-16">
+        <div class="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h3 class="font-display text-lg italic">Stay in touch</h3>
             <p class="text-sm text-cream/60">Subscribe for new arrivals and exclusive offers.</p>
@@ -82,7 +82,7 @@ import { CatalogService } from '../../features/catalog/catalog.service';
         }
       </div>
 
-      <div class="border-t border-cream/10 px-6 py-6 text-center text-xs text-cream/40 md:px-10">
+      <div class="border-t border-cream/10 px-6 py-6 text-center text-xs text-cream/40 md:px-10 lg:px-16">
         © {{ currentYear }} Maison. All rights reserved.
       </div>
     </footer>

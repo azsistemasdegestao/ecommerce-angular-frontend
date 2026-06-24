@@ -8,7 +8,7 @@ import { AuthService } from '../../core/auth/auth.service';
   imports: [RouterLink, RouterLinkActive],
   template: `
     <header class="sticky top-0 z-20 border-b border-charcoal/10 bg-cream/95 backdrop-blur-sm">
-      <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4 md:px-10">
+      <div class="flex items-center justify-between gap-4 px-6 py-4 md:px-10 lg:px-16">
         <a routerLink="/" class="font-display text-xl italic text-charcoal md:text-2xl">Maison</a>
 
         <nav class="hidden items-center gap-8 text-sm uppercase tracking-wide text-graphite-muted md:flex">
