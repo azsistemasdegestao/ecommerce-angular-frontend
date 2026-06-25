@@ -7,6 +7,7 @@ export interface PaymentDetailDto {
   id: string;
   order_id: string;
   order_user_id: string;
+  payment_method: string;
   provider: string;
   status: string;
   updated_at: string;

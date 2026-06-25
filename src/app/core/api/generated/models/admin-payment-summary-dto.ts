@@ -6,6 +6,7 @@ export interface AdminPaymentSummaryDto {
   created_at: string;
   id: string;
   order_id: string;
+  payment_method: string;
   status: string;
   user_email: string;
   user_id: string;

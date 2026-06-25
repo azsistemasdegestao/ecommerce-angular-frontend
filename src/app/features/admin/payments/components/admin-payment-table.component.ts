@@ -13,6 +13,7 @@ import { AdminPaymentSummaryDto } from '../../../../core/api/generated/models/ad
           <th class="py-2">Order</th>
           <th class="py-2">User</th>
           <th class="py-2">Amount</th>
+          <th class="py-2">Method</th>
           <th class="py-2">Status</th>
           <th class="py-2">Date</th>
           <th class="py-2">Actions</th>
@@ -25,6 +26,7 @@ import { AdminPaymentSummaryDto } from '../../../../core/api/generated/models/ad
             <td class="py-2">{{ payment.order_id.slice(0, 8) }}</td>
             <td class="py-2">{{ payment.user_email }}</td>
             <td class="py-2">{{ payment.amount | number: '1.2-2' }}</td>
+            <td class="py-2">{{ payment.payment_method }}</td>
             <td class="py-2">{{ payment.status }}</td>
             <td class="py-2 text-graphite-muted">{{ payment.created_at | date: 'mediumDate' }}</td>
             <td class="py-2">

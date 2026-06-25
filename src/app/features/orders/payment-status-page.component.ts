@@ -28,7 +28,10 @@ import { PaymentTimeoutStateComponent } from './payment-components/payment-timeo
           }
         }
         @default {
-          <app-payment-pending-state />
+          <app-payment-pending-state
+            [paymentMethod]="paymentService.payment()?.payment_method ?? null"
+            [paymentId]="paymentService.payment()?.id ?? null"
+          />
         }
       }
     </div>

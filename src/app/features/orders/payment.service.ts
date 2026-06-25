@@ -26,6 +26,7 @@ export class PaymentService {
   private readonly _payment = signal<PaymentDetailDto | null>(null);
   private readonly _pollingState = signal<PollingState>('idle');
   private readonly _networkRetryCount = signal(0);
+  private lastPaymentMethod = '';
 
   readonly payment = this._payment.asReadonly();
   readonly pollingState = this._pollingState.asReadonly();
@@ -44,6 +45,7 @@ export class PaymentService {
     try {
       const resp = await firstValueFrom(getPaymentByOrderId(this.http, this.apiConfig.rootUrl, { orderId }));
       this._payment.set(resp.body!);
+      this.lastPaymentMethod = resp.body!.payment_method;
       if (UNRESOLVED_STATUSES.has(resp.body!.status)) {
         this.beginPolling(orderId, 0);
       } else {
@@ -51,23 +53,31 @@ export class PaymentService {
       }
     } catch (error) {
       if ((error as ApiError).status === 404) {
-        await this.requestPayment(orderId);
+        await this.requestPayment(orderId, this.lastPaymentMethod);
       } else {
         throw error;
       }
     }
   }
 
-  /** Initial trigger, and also used for "try again" after a Failed payment. */
-  async requestPayment(orderId: string): Promise<void> {
+  /**
+   * Initial trigger, and also used for "try again" after a Failed payment -
+   * in which case `paymentMethod` is omitted and the previously chosen
+   * method (set on the first call) is reused.
+   */
+  async requestPayment(orderId: string, paymentMethod?: string): Promise<void> {
+    const method = paymentMethod || this.lastPaymentMethod || 'CreditCard';
+    this.lastPaymentMethod = method;
+
     const resp = await firstValueFrom(
-      requestPaymentFn(this.http, this.apiConfig.rootUrl, { body: { order_id: orderId } }),
+      requestPaymentFn(this.http, this.apiConfig.rootUrl, { body: { order_id: orderId, payment_method: method } }),
     );
     this._payment.set({
       id: resp.body!.payment_id,
       order_id: resp.body!.order_id,
       amount: resp.body!.amount,
       status: resp.body!.status,
+      payment_method: resp.body!.payment_method,
       provider: '',
       order_user_id: '',
       created_at: new Date().toISOString(),
