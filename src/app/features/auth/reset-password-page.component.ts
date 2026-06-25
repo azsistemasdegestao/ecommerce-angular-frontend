@@ -16,21 +16,21 @@ function passwordsMatchValidator(control: AbstractControl): ValidationErrors | n
   selector: 'app-reset-password-page',
   imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
   template: `
-    <div class="mx-auto max-w-sm p-6">
-      <h1 class="mb-6 text-xl font-semibold">Reset password</h1>
+    <div class="mx-auto max-w-sm p-8 md:p-10">
+      <h1 class="mb-6 font-display text-2xl italic text-charcoal">Reset password</h1>
 
       @if (invalidToken()) {
-        <p class="mb-4 text-sm text-red-600" role="alert">
+        <p class="mb-4 text-sm text-red-700" role="alert">
           This reset link is invalid or has expired.
         </p>
-        <a class="text-sm text-blue-600 hover:underline" routerLink="/forgot-password">
+        <a class="text-sm text-champagne hover:underline" routerLink="/forgot-password">
           Request a new link
         </a>
       } @else if (success()) {
-        <p class="mb-4 text-sm text-green-700" role="status">
+        <p class="mb-4 text-sm text-emerald-700" role="status">
           Your password has been reset. You can now log in.
         </p>
-        <a class="text-sm text-blue-600 hover:underline" routerLink="/login">Back to login</a>
+        <a class="text-sm text-champagne hover:underline" routerLink="/login">Back to login</a>
       } @else {
         <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="submit()">
           <app-input

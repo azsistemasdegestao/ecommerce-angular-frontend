@@ -10,15 +10,15 @@ import { ToastService } from '../../../shared/toast/toast.service';
   selector: 'app-admin-order-detail-page',
   imports: [RouterLink, ForceStatusFormComponent, OrderStatusBadgeComponent, OrderSummaryComponent],
   template: `
-    <div class="max-w-2xl p-4 lg:p-6">
+    <div class="max-w-2xl">
       @if (adminOrderService.orderNotFound()) {
         <div class="flex flex-col items-center gap-4 py-12 text-center">
-          <h1 class="text-xl font-semibold">Order not found</h1>
-          <a class="text-blue-600 hover:underline" routerLink="/admin/orders">Back to orders</a>
+          <p class="font-display text-xl italic text-charcoal">Order not found</p>
+          <a class="text-champagne hover:underline" routerLink="/admin/orders">Back to orders</a>
         </div>
       } @else if (adminOrderService.currentOrder(); as order) {
         <div class="mb-4 flex items-center justify-between">
-          <h1 class="text-xl font-semibold">Order #{{ order.id.slice(0, 8) }}</h1>
+          <p class="text-sm uppercase tracking-wide text-graphite-muted">Order #{{ order.id.slice(0, 8) }}</p>
           <app-order-status-badge [status]="order.status" />
         </div>
 

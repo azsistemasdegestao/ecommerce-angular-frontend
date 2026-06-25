@@ -9,18 +9,20 @@ import { ProductSummaryDto } from '../../../core/api/generated/models/product-su
   template: `
     <a
       [routerLink]="['/products', product.slug]"
-      class="flex flex-col gap-2 rounded-lg border border-gray-200 p-3 hover:shadow-md"
+      class="group flex flex-col gap-3 rounded-sm bg-surface p-3 shadow-sm transition-shadow duration-500 hover:shadow-md"
     >
-      <img
-        [src]="product.image_url"
-        [alt]="product.name"
-        class="aspect-square w-full rounded-md bg-gray-50 object-contain object-center"
-      />
-      <h3 class="text-sm font-medium text-gray-900">{{ product.name }}</h3>
+      <div class="aspect-square w-full overflow-hidden bg-cream">
+        <img
+          [src]="product.image_url"
+          [alt]="product.name"
+          class="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <h3 class="font-display text-lg text-charcoal">{{ product.name }}</h3>
       <div class="flex items-center justify-between">
-        <span class="text-sm font-semibold">{{ product.price | number: '1.2-2' }}</span>
+        <span class="text-sm font-medium text-champagne">{{ product.price | number: '1.2-2' }}</span>
         @if (!product.in_stock) {
-          <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">Out of stock</span>
+          <span class="rounded-sm bg-charcoal/5 px-2 py-0.5 text-xs text-graphite-muted">Out of stock</span>
         }
       </div>
     </a>

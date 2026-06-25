@@ -9,13 +9,14 @@ import { environment } from '../../../environments/environment';
 const API = environment.apiBaseUrl;
 const ORDER_ID = 'order-1';
 
-function paymentResponse(status: string) {
+function paymentResponse(status: string, paymentMethod = 'CreditCard') {
   return {
     id: 'payment-1',
     order_id: ORDER_ID,
     order_user_id: 'user-1',
     amount: 49.9,
     provider: 'mock',
+    payment_method: paymentMethod,
     status,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
@@ -168,5 +169,54 @@ describe('PaymentService', () => {
     service.stopPolling();
     await vi.advanceTimersByTimeAsync(2000);
     httpMock.expectNone(`${API}/api/v1/payments/${ORDER_ID}`);
+  });
+
+  it('AC-FE-PAYMENT-U-09: requestPayment sends the chosen payment method in the request body', async () => {
+    const requestPromise = service.requestPayment(ORDER_ID, 'Pix');
+
+    const req = httpMock.expectOne(`${API}/api/v1/payments`);
+    expect(req.request.body).toEqual({ order_id: ORDER_ID, payment_method: 'Pix' });
+    req.flush({
+      payment_id: 'payment-1',
+      order_id: ORDER_ID,
+      amount: 49.9,
+      status: 'Pending',
+      payment_method: 'Pix',
+      message: 'ok',
+    });
+    await requestPromise;
+
+    expect(service.payment()?.payment_method).toBe('Pix');
+  });
+
+  it('AC-FE-PAYMENT-U-10: retrying after a failure reuses the originally chosen payment method', async () => {
+    const firstRequest = service.requestPayment(ORDER_ID, 'Boleto');
+    httpMock.expectOne(`${API}/api/v1/payments`).flush({
+      payment_id: 'payment-1',
+      order_id: ORDER_ID,
+      amount: 49.9,
+      status: 'Pending',
+      payment_method: 'Boleto',
+      message: 'ok',
+    });
+    await firstRequest;
+    await vi.advanceTimersByTimeAsync(600);
+    httpMock.expectOne(`${API}/api/v1/payments/${ORDER_ID}`).flush(paymentResponse('Failed', 'Boleto'));
+    await Promise.resolve();
+    await Promise.resolve();
+
+    // Retry omits the method - the service must remember the one chosen originally.
+    const retryRequest = service.requestPayment(ORDER_ID);
+    const retryReq = httpMock.expectOne(`${API}/api/v1/payments`);
+    expect(retryReq.request.body).toEqual({ order_id: ORDER_ID, payment_method: 'Boleto' });
+    retryReq.flush({
+      payment_id: 'payment-2',
+      order_id: ORDER_ID,
+      amount: 49.9,
+      status: 'Pending',
+      payment_method: 'Boleto',
+      message: 'ok',
+    });
+    await retryRequest;
   });
 });

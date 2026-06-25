@@ -5,15 +5,15 @@ import { Component, EventEmitter, Input, Output, computed, signal } from '@angul
   template: `
     <nav class="flex items-center justify-center gap-2" aria-label="Pagination">
       <button
-        class="rounded-md px-3 py-1 text-sm disabled:cursor-not-allowed disabled:text-gray-400"
+        class="rounded-sm px-3 py-1 text-sm text-charcoal transition-colors hover:text-champagne disabled:cursor-not-allowed disabled:text-charcoal/30"
         [disabled]="pageNumber() <= 1"
         (click)="goTo(pageNumber() - 1)"
       >
         Previous
       </button>
-      <span class="text-sm text-gray-700">Page {{ pageNumber() }} of {{ totalPages() }}</span>
+      <span class="text-sm text-graphite-muted">Page {{ pageNumber() }} of {{ totalPages() }}</span>
       <button
-        class="rounded-md px-3 py-1 text-sm disabled:cursor-not-allowed disabled:text-gray-400"
+        class="rounded-sm px-3 py-1 text-sm text-charcoal transition-colors hover:text-champagne disabled:cursor-not-allowed disabled:text-charcoal/30"
         [disabled]="pageNumber() >= totalPages()"
         (click)="goTo(pageNumber() + 1)"
       >

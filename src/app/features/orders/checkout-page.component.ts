@@ -3,19 +3,31 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartService } from '../cart/cart.service';
 import { OrderService } from './order.service';
+import { PaymentService } from './payment.service';
 import { OrderSummaryComponent } from './components/order-summary.component';
 import { InputComponent } from '../../shared/input/input.component';
 import { ButtonComponent } from '../../shared/button/button.component';
+
+interface PaymentMethodOption {
+  value: string;
+  label: string;
+}
+
+const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = [
+  { value: 'CreditCard', label: 'Credit card' },
+  { value: 'Pix', label: 'Pix' },
+  { value: 'Boleto', label: 'Boleto' },
+];
 
 @Component({
   selector: 'app-checkout-page',
   imports: [ReactiveFormsModule, OrderSummaryComponent, InputComponent, ButtonComponent],
   template: `
-    <div class="mx-auto max-w-xl p-4 md:p-6">
-      <h1 class="mb-4 text-xl font-semibold">Checkout</h1>
+    <div class="mx-auto max-w-xl p-6 md:p-10">
+      <h1 class="mb-6 font-display text-2xl italic text-charcoal">Checkout</h1>
 
       @if (errorMessage()) {
-        <p class="mb-4 text-sm text-red-600" role="alert">{{ errorMessage() }}</p>
+        <p class="mb-4 text-sm text-red-700" role="alert">{{ errorMessage() }}</p>
       }
 
       <app-order-summary
@@ -29,6 +41,27 @@ import { ButtonComponent } from '../../shared/button/button.component';
           formControlName="shipping_address"
           [errorMessage]="addressError()"
         />
+
+        <div>
+          <p class="mb-2 text-sm font-medium text-charcoal">Payment method</p>
+          <div class="flex gap-2">
+            @for (option of paymentMethodOptions; track option.value) {
+              <button
+                type="button"
+                class="flex-1 rounded-sm border px-3 py-2 text-sm transition-colors"
+                [class]="
+                  form.controls.payment_method.value === option.value
+                    ? 'border-champagne text-charcoal'
+                    : 'border-charcoal/20 text-graphite-muted hover:border-champagne'
+                "
+                (click)="form.controls.payment_method.setValue(option.value)"
+              >
+                {{ option.label }}
+              </button>
+            }
+          </div>
+        </div>
+
         <app-button type="submit" [loading]="orderService.isSubmittingCheckout()">
           Confirm order
         </app-button>
@@ -39,13 +72,16 @@ import { ButtonComponent } from '../../shared/button/button.component';
 export class CheckoutPageComponent implements OnInit {
   protected readonly cartService = inject(CartService);
   protected readonly orderService = inject(OrderService);
+  private readonly paymentService = inject(PaymentService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
 
   protected readonly errorMessage = signal('');
+  protected readonly paymentMethodOptions = PAYMENT_METHOD_OPTIONS;
 
   protected readonly form = this.fb.nonNullable.group({
     shipping_address: ['', [Validators.required]],
+    payment_method: ['CreditCard', [Validators.required]],
   });
 
   ngOnInit(): void {
@@ -66,7 +102,13 @@ export class CheckoutPageComponent implements OnInit {
 
     this.errorMessage.set('');
     try {
-      const order = await this.orderService.checkout(this.form.getRawValue().shipping_address);
+      const { shipping_address, payment_method } = this.form.getRawValue();
+      const order = await this.orderService.checkout(shipping_address);
+      try {
+        await this.paymentService.requestPayment(order.id, payment_method);
+      } catch {
+        // The payment screen retries the request automatically on load if none exists yet.
+      }
       await this.router.navigate(['/orders', order.id, 'payment']);
     } catch (error) {
       const status = (error as { status?: number }).status;

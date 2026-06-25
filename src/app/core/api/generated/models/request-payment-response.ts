@@ -6,5 +6,6 @@ export interface RequestPaymentResponse {
   message: string;
   order_id: string;
   payment_id: string;
+  payment_method: string;
   status: string;
 }

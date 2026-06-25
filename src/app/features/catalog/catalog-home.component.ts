@@ -5,13 +5,15 @@ import { CatalogFilters, CatalogService, DEFAULT_PAGE_SIZE } from './catalog.ser
 import { ProductGridComponent } from './components/product-grid.component';
 import { FilterBarComponent, FilterBarChange } from './components/filter-bar.component';
 import { CategoryNavComponent } from './components/category-nav.component';
+import { HeroComponent } from './components/hero.component';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-catalog-home',
-  imports: [ProductGridComponent, FilterBarComponent, CategoryNavComponent, PaginationComponent],
+  imports: [ProductGridComponent, FilterBarComponent, CategoryNavComponent, HeroComponent, PaginationComponent],
   template: `
-    <div class="flex flex-col gap-4 p-4 md:flex-row md:p-6">
+    <app-hero />
+    <div class="flex flex-col gap-8 p-6 md:flex-row md:gap-12 md:p-10 lg:p-16">
       <aside class="md:w-48">
         <app-category-nav [categories]="catalogService.categories()" />
       </aside>

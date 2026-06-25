@@ -1,4 +1,4 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { getCart } from '../../core/api/generated/fn/cart/get-cart';
@@ -11,6 +11,7 @@ import { CartDto } from '../../core/api/generated/models/cart-dto';
 import { CartItemDto } from '../../core/api/generated/models/cart-item-dto';
 import { ApiError } from '../../core/api/api-error';
 import { ToastService } from '../../shared/toast/toast.service';
+import { AuthService } from '../../core/auth/auth.service';
 
 export interface AddableProduct {
   id: string;
@@ -35,6 +36,7 @@ export class CartService {
   private readonly http = inject(HttpClient);
   private readonly apiConfig = inject(ApiConfiguration);
   private readonly toastService = inject(ToastService);
+  private readonly authService = inject(AuthService);
 
   private readonly _cart = signal<CartDto>(EMPTY_CART);
   private readonly _isLoading = signal(false);
@@ -48,6 +50,16 @@ export class CartService {
   readonly pendingItemIds = this._pendingItemIds.asReadonly();
   readonly itemErrors = this._itemErrors.asReadonly();
   readonly isEmpty = computed(() => this._cart().item_count === 0);
+
+  constructor() {
+    effect(() => {
+      if (this.authService.isAuthenticated()) {
+        void this.loadCart();
+      } else {
+        this.clearLocal();
+      }
+    });
+  }
 
   private setPending(itemId: string, pending: boolean): void {
     this._pendingItemIds.update((set) => {
@@ -76,7 +88,12 @@ export class CartService {
     }
   }
 
-  async addItem(product: AddableProduct, quantity: number): Promise<void> {
+  async addItem(product: AddableProduct, quantity: number): Promise<boolean> {
+    if (!this.authService.isAuthenticated()) {
+      this.toastService.show('warning', 'Crie uma conta ou faça login para adicionar itens ao carrinho.');
+      return false;
+    }
+
     const previous = this._cart();
     const existing = previous.items.find((item) => item.product_id === product.id);
     const tempId = existing?.id ?? `temp-${Math.random().toString(36).slice(2)}`;
@@ -110,7 +127,7 @@ export class CartService {
     try {
       const resp = await firstValueFrom(
         addItemToCart(this.http, this.apiConfig.rootUrl, {
-          body: { product_id: product.id, quantity: existing ? Number(existing.quantity) + quantity : quantity },
+          body: { product_id: product.id, quantity },
         }),
       );
       const body = resp.body!;
@@ -130,16 +147,20 @@ export class CartService {
           ),
         ),
       }));
+      return true;
     } catch (error) {
       this._cart.set(previous);
       const apiError = error as ApiError;
-      if (apiError.status === 404) {
+      if (apiError.status === 401) {
+        this.toastService.show('warning', 'Crie uma conta ou faça login para adicionar itens ao carrinho.');
+      } else if (apiError.status === 404) {
         this.toastService.show('error', 'This product is no longer available.');
       } else if (apiError.status === 422) {
         this.toastService.show('error', 'Not enough stock available for this product.');
       } else {
         this.toastService.show('error', 'Could not add this item to your cart.');
       }
+      return false;
     } finally {
       this.setPending(tempId, false);
     }

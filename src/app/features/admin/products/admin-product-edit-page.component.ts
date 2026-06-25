@@ -10,12 +10,10 @@ import { ToastService } from '../../../shared/toast/toast.service';
   selector: 'app-admin-product-edit-page',
   imports: [RouterLink, ProductFormComponent, ImageUploaderComponent],
   template: `
-    <div class="max-w-xl p-4 lg:p-6">
-      <h1 class="mb-4 text-xl font-semibold">Edit product</h1>
-
+    <div class="max-w-xl">
       @if (catalogService.productNotFound()) {
-        <p class="text-gray-600">Product not found.</p>
-        <a class="text-blue-600 hover:underline" routerLink="/admin/products">Back to products</a>
+        <p class="text-graphite-muted">Product not found.</p>
+        <a class="text-champagne hover:underline" routerLink="/admin/products">Back to products</a>
       } @else if (catalogService.currentProduct(); as product) {
         <app-product-form
           [categories]="catalogService.categories()"
@@ -33,7 +31,7 @@ import { ToastService } from '../../../shared/toast/toast.service';
         />
 
         <div class="mt-6">
-          <h2 class="mb-2 text-sm font-medium text-gray-700">Product image</h2>
+          <h2 class="mb-2 text-sm font-medium text-graphite-muted">Product image</h2>
           <app-image-uploader
             [previewUrl]="previewUrl() ?? product.image_url"
             [uploading]="adminProductService.isUploadingImage()"

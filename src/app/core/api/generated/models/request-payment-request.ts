@@ -3,4 +3,5 @@
 
 export interface RequestPaymentRequest {
   order_id: string;
+  payment_method: string;
 }

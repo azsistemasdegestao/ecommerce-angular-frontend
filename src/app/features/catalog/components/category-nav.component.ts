@@ -9,17 +9,17 @@ import { CategoryDto } from '../../../core/api/generated/models/category-dto';
     <nav class="flex gap-2 overflow-x-auto md:flex-col md:overflow-visible">
       <a
         routerLink="/"
-        routerLinkActive="font-semibold text-blue-600"
+        routerLinkActive="text-charcoal border-l-2 border-champagne"
         [routerLinkActiveOptions]="{ exact: true }"
-        class="whitespace-nowrap rounded-md px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
+        class="whitespace-nowrap rounded-sm px-3 py-1.5 text-sm text-graphite-muted hover:bg-charcoal/5 hover:text-charcoal"
       >
         All
       </a>
       @for (category of categories; track category.id) {
         <a
           [routerLink]="['/categories', category.slug]"
-          routerLinkActive="font-semibold text-blue-600"
-          class="whitespace-nowrap rounded-md px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
+          routerLinkActive="text-charcoal border-l-2 border-champagne"
+          class="whitespace-nowrap rounded-sm px-3 py-1.5 text-sm text-graphite-muted hover:bg-charcoal/5 hover:text-charcoal"
         >
           {{ category.name }}
         </a>

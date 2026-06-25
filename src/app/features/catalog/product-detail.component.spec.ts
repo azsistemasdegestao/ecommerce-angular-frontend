@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ProductDetailComponent } from './product-detail.component';
+import { AuthService } from '../../core/auth/auth.service';
 import { provideApiConfiguration } from '../../core/api/generated/api-configuration';
 import { environment } from '../../../environments/environment';
 
@@ -21,6 +22,7 @@ describe('ProductDetailComponent', () => {
         provideHttpClientTesting(),
         provideApiConfiguration(environment.apiBaseUrl),
         provideRouter([]),
+        { provide: AuthService, useValue: { isAuthenticated: () => true } },
         {
           provide: ActivatedRoute,
           useValue: { snapshot: { paramMap: new Map([['slug', 'a-product']]) } },

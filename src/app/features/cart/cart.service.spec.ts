@@ -1,14 +1,25 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CartService } from './cart.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { provideApiConfiguration } from '../../core/api/generated/api-configuration';
 import { environment } from '../../../environments/environment';
 
 const API = environment.apiBaseUrl;
 
 const PRODUCT = { id: 'p1', name: 'Sneaker', slug: 'sneaker', imageUrl: 'https://x/img.png', price: 49.9 };
+
+class FakeAuthService {
+  private readonly authenticated = signal(true);
+  readonly isAuthenticated = this.authenticated.asReadonly();
+
+  setAuthenticated(value: boolean): void {
+    this.authenticated.set(value);
+  }
+}
 
 describe('CartService', () => {
   let service: CartService;
@@ -20,6 +31,7 @@ describe('CartService', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideApiConfiguration(environment.apiBaseUrl),
+        { provide: AuthService, useClass: FakeAuthService },
       ],
     });
     service = TestBed.inject(CartService);
@@ -107,6 +119,97 @@ describe('CartService', () => {
     expect(service.isEmpty()).toBe(true);
   });
 
+  it('AC-FE-CART-U-06: a guest cannot add an item and no request is made', async () => {
+    const authService = TestBed.inject(AuthService) as unknown as FakeAuthService;
+    authService.setAuthenticated(false);
+
+    const added = await service.addItem(PRODUCT, 1);
+
+    expect(added).toBe(false);
+    expect(service.cart().items.length).toBe(0);
+    httpMock.expectNone(`${API}/api/v1/cart/items`);
+  });
+
+  it('AC-FE-CART-U-07: logging out (auth state goes false) clears the cart', async () => {
+    const authService = TestBed.inject(AuthService) as unknown as FakeAuthService;
+    const addPromise = service.addItem(PRODUCT, 1);
+    httpMock.expectOne(`${API}/api/v1/cart/items`).flush({
+      cart_id: 'cart-1',
+      item_id: 'item-1',
+      product_id: 'p1',
+      quantity: 1,
+      unit_price: 49.9,
+      subtotal: 49.9,
+    });
+    await addPromise;
+    expect(service.cart().items.length).toBe(1);
+
+    authService.setAuthenticated(false);
+    TestBed.flushEffects();
+
+    expect(service.cart().items.length).toBe(0);
+  });
+
+  it('AC-FE-CART-U-09: the cart is reloaded from the server whenever the user becomes authenticated (e.g. on page refresh or login)', async () => {
+    const authService = TestBed.inject(AuthService) as unknown as FakeAuthService;
+
+    // Initial construction already happened with isAuthenticated() === true; flushing
+    // the effect now simulates the app-initializer resolving the session on page load.
+    TestBed.flushEffects();
+    httpMock.expectOne(`${API}/api/v1/cart`).flush({
+      id: 'cart-1',
+      items: [
+        {
+          id: 'item-1',
+          product_id: 'p1',
+          product_name: 'Sneaker',
+          product_slug: 'sneaker',
+          image_url: 'https://x/img.png',
+          quantity: 2,
+          unit_price: 49.9,
+          subtotal: 99.8,
+        },
+      ],
+      total: 99.8,
+      item_count: 2,
+      updated_at: '2024-01-01T00:00:00Z',
+    });
+    await Promise.resolve();
+    expect(service.cart().items.length).toBe(1);
+
+    // Logging out clears it locally (no request needed).
+    authService.setAuthenticated(false);
+    TestBed.flushEffects();
+    expect(service.cart().items.length).toBe(0);
+
+    // Logging back in (or a fresh page load resolving the session) must re-fetch the
+    // server cart rather than leaving the in-memory cart empty.
+    authService.setAuthenticated(true);
+    TestBed.flushEffects();
+    httpMock.expectOne(`${API}/api/v1/cart`).flush({
+      id: 'cart-1',
+      items: [
+        {
+          id: 'item-1',
+          product_id: 'p1',
+          product_name: 'Sneaker',
+          product_slug: 'sneaker',
+          image_url: 'https://x/img.png',
+          quantity: 2,
+          unit_price: 49.9,
+          subtotal: 99.8,
+        },
+      ],
+      total: 99.8,
+      item_count: 2,
+      updated_at: '2024-01-01T00:00:00Z',
+    });
+    await Promise.resolve();
+
+    expect(service.cart().items.length).toBe(1);
+    expect(service.isEmpty()).toBe(false);
+  });
+
   it('AC-FE-CART-E-02: adding the same product twice increments quantity instead of duplicating', async () => {
     const firstAdd = service.addItem(PRODUCT, 1);
     httpMock.expectOne(`${API}/api/v1/cart/items`).flush({
@@ -136,5 +239,34 @@ describe('CartService', () => {
 
     expect(service.cart().items.length).toBe(1);
     expect(service.cart().items[0].quantity).toBe(2);
+  });
+
+  it('AC-FE-CART-U-08: adding an already-present product sends only the added delta, not the running total (backend sums it server-side)', async () => {
+    const firstAdd = service.addItem(PRODUCT, 1);
+    httpMock.expectOne(`${API}/api/v1/cart/items`).flush({
+      cart_id: 'cart-1',
+      item_id: 'item-1',
+      product_id: 'p1',
+      quantity: 1,
+      unit_price: 49.9,
+      subtotal: 49.9,
+    });
+    await firstAdd;
+
+    const secondAdd = service.addItem(PRODUCT, 3);
+    const req = httpMock.expectOne(`${API}/api/v1/cart/items`);
+    expect(req.request.body).toEqual({ product_id: 'p1', quantity: 3 });
+
+    req.flush({
+      cart_id: 'cart-1',
+      item_id: 'item-1',
+      product_id: 'p1',
+      quantity: 4,
+      unit_price: 49.9,
+      subtotal: 199.6,
+    });
+    await secondAdd;
+
+    expect(service.cart().items[0].quantity).toBe(4);
   });
 });

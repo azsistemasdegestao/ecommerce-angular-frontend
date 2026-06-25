@@ -6,14 +6,14 @@ import { ButtonComponent } from '../../../shared/button/button.component';
   selector: 'app-cart-summary',
   imports: [DecimalPipe, ButtonComponent],
   template: `
-    <div class="flex flex-col gap-3 border-t border-gray-200 pt-4">
-      <div class="flex justify-between text-sm text-gray-600">
+    <div class="flex flex-col gap-3 border-t border-charcoal/10 pt-6">
+      <div class="flex justify-between text-sm text-graphite-muted">
         <span>Items</span>
         <span>{{ itemCount }}</span>
       </div>
-      <div class="flex justify-between text-base font-semibold">
+      <div class="flex justify-between text-base font-medium text-charcoal">
         <span>Total</span>
-        <span>{{ total | number: '1.2-2' }}</span>
+        <span class="text-champagne">{{ total | number: '1.2-2' }}</span>
       </div>
       <app-button [disabled]="itemCount === 0" (click)="checkout.emit()">Go to checkout</app-button>
     </div>

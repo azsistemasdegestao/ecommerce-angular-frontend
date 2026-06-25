@@ -6,12 +6,12 @@ import { ButtonComponent, ButtonVariant } from '../button/button.component';
   imports: [ButtonComponent],
   template: `
     @if (open) {
-      <div class="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
-        <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+      <div class="fixed inset-0 z-40 flex items-center justify-center bg-charcoal/60 p-4">
+        <div class="w-full max-w-md rounded-sm bg-surface p-6 shadow-xl">
           @if (title) {
-            <h2 class="mb-4 text-lg font-semibold text-gray-900">{{ title }}</h2>
+            <h2 class="mb-4 font-display text-xl italic text-charcoal">{{ title }}</h2>
           }
-          <div class="mb-6 text-sm text-gray-700">
+          <div class="mb-6 text-sm text-graphite-muted">
             <ng-content />
           </div>
           <div class="flex justify-end gap-2">

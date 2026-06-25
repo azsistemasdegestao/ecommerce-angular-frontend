@@ -17,7 +17,7 @@ export type FilterBarChange = Pick<
     <div class="md:hidden">
       <button
         type="button"
-        class="mb-2 rounded-md border border-gray-300 px-3 py-2 text-sm"
+        class="mb-2 rounded-sm border border-charcoal/20 px-3 py-2 text-sm text-charcoal transition-colors hover:border-champagne hover:text-champagne"
         (click)="panelOpen.set(!panelOpen())"
       >
         Filters
@@ -25,7 +25,7 @@ export type FilterBarChange = Pick<
     </div>
 
     <form
-      class="gap-3 md:flex md:flex-row md:items-end md:gap-4"
+      class="gap-4 md:flex md:flex-row md:items-end md:gap-6"
       [class.hidden]="!panelOpen()"
       [class.flex]="panelOpen()"
       [class.flex-col]="panelOpen()"
@@ -35,8 +35,8 @@ export type FilterBarChange = Pick<
       <app-select label="Category" [options]="categoryOptions()" formControlName="category_slug" />
       <app-input label="Min price" type="number" formControlName="min_price" />
       <app-input label="Max price" type="number" formControlName="max_price" />
-      <label class="flex items-center gap-2 text-sm text-gray-700">
-        <input type="checkbox" formControlName="in_stock" />
+      <label class="flex items-center gap-2 text-sm text-graphite-muted">
+        <input type="checkbox" class="accent-champagne" formControlName="in_stock" />
         In stock only
       </label>
     </form>

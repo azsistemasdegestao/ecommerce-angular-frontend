@@ -6,7 +6,7 @@ import { ButtonComponent } from '../../../shared/button/button.component';
   imports: [ButtonComponent],
   template: `
     <div class="flex flex-col items-center gap-4 py-12 text-center">
-      <p class="text-gray-600">
+      <p class="text-graphite-muted">
         We're still waiting to hear back about your payment. This doesn't mean it failed.
       </p>
       <app-button variant="secondary" [loading]="checking" (click)="checkNow.emit()">

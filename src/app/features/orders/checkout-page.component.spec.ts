@@ -5,6 +5,7 @@ import { Router, provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CheckoutPageComponent } from './checkout-page.component';
 import { CartService } from '../cart/cart.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { provideApiConfiguration } from '../../core/api/generated/api-configuration';
 import { environment } from '../../../environments/environment';
 
@@ -24,6 +25,7 @@ describe('CheckoutPageComponent', () => {
         provideHttpClientTesting(),
         provideApiConfiguration(environment.apiBaseUrl),
         provideRouter([]),
+        { provide: AuthService, useValue: { isAuthenticated: () => true } },
       ],
     }).compileComponents();
 
@@ -74,5 +76,63 @@ describe('CheckoutPageComponent', () => {
     fixture.detectChanges();
     const el: HTMLElement = fixture.nativeElement;
     expect(el.textContent).toContain('no longer available');
+  });
+
+  it('AC-FE-ORDERS-U-04: a successful checkout requests payment with the chosen method and navigates to the payment screen', async () => {
+    const addPromise = cartService.addItem(
+      { id: 'p1', name: 'Sneaker', slug: 'sneaker', imageUrl: 'https://x/img.png', price: 49.9 },
+      1,
+    );
+    httpMock.expectOne(`${API}/api/v1/cart/items`).flush({
+      cart_id: 'cart-1',
+      item_id: 'item-1',
+      product_id: 'p1',
+      quantity: 1,
+      unit_price: 49.9,
+      subtotal: 49.9,
+    });
+    await addPromise;
+
+    fixture = TestBed.createComponent(CheckoutPageComponent);
+    fixture.detectChanges();
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+
+    const component = fixture.componentInstance as unknown as {
+      form: {
+        controls: {
+          shipping_address: { setValue: (v: string) => void };
+          payment_method: { setValue: (v: string) => void };
+        };
+      };
+      submit: () => Promise<void>;
+    };
+    component.form.controls.shipping_address.setValue('123 Main St');
+    component.form.controls.payment_method.setValue('Pix');
+    const submitPromise = component.submit();
+
+    httpMock.expectOne(`${API}/api/v1/orders`).flush({
+      id: 'order-1',
+      status: 'Pending',
+      total: 49.9,
+      shipping_address: '123 Main St',
+      item_count: 1,
+      created_at: '2024-01-01T00:00:00Z',
+    });
+    await Promise.resolve();
+    await Promise.resolve();
+
+    const paymentReq = httpMock.expectOne(`${API}/api/v1/payments`);
+    expect(paymentReq.request.body).toEqual({ order_id: 'order-1', payment_method: 'Pix' });
+    paymentReq.flush({
+      payment_id: 'payment-1',
+      order_id: 'order-1',
+      amount: 49.9,
+      status: 'Pending',
+      payment_method: 'Pix',
+      message: 'Payment is being processed.',
+    });
+    await submitPromise;
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/orders', 'order-1', 'payment']);
   });
 });

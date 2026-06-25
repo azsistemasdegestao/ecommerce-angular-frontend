@@ -9,8 +9,8 @@ import { ModalComponent } from '../../shared/modal/modal.component';
   selector: 'app-cart-page',
   imports: [RouterLink, CartItemRowComponent, CartSummaryComponent, ModalComponent],
   template: `
-    <div class="mx-auto max-w-2xl p-4 md:p-6">
-      <h1 class="mb-4 text-xl font-semibold">Your cart</h1>
+    <div class="mx-auto max-w-2xl p-6 md:p-10">
+      <h1 class="mb-6 font-display text-2xl italic text-charcoal">Your cart</h1>
 
       @if (showEmptyCheckoutMessage()) {
         <p class="mb-4 text-sm text-amber-700" role="status">
@@ -19,9 +19,9 @@ import { ModalComponent } from '../../shared/modal/modal.component';
       }
 
       @if (cartService.isEmpty()) {
-        <div class="flex flex-col items-center gap-4 py-8 text-center">
-          <p class="text-gray-600">Your cart is empty.</p>
-          <a class="text-blue-600 hover:underline" routerLink="/">Browse the catalog</a>
+        <div class="flex flex-col items-center gap-4 py-12 text-center">
+          <p class="text-graphite-muted">Your cart is empty.</p>
+          <a class="text-champagne hover:underline" routerLink="/">Browse the catalog</a>
         </div>
       } @else {
         <div>
@@ -38,7 +38,7 @@ import { ModalComponent } from '../../shared/modal/modal.component';
 
         <button
           type="button"
-          class="mt-4 text-sm text-red-600 hover:underline"
+          class="mt-4 text-sm text-red-700 hover:underline"
           (click)="confirmClearOpen.set(true)"
         >
           Clear cart

@@ -9,20 +9,20 @@ import { CancelOrderButtonComponent } from './components/cancel-order-button.com
   selector: 'app-order-detail',
   imports: [RouterLink, OrderStatusBadgeComponent, OrderSummaryComponent, CancelOrderButtonComponent],
   template: `
-    <div class="mx-auto max-w-2xl p-4 md:p-6">
+    <div class="mx-auto max-w-2xl p-6 md:p-10">
       @if (orderService.orderNotFound()) {
         <div class="flex flex-col items-center gap-4 py-12 text-center">
-          <h1 class="text-xl font-semibold">Order not found</h1>
-          <a class="text-blue-600 hover:underline" routerLink="/orders">Back to orders</a>
+          <h1 class="font-display text-xl italic text-charcoal">Order not found</h1>
+          <a class="text-champagne hover:underline" routerLink="/orders">Back to orders</a>
         </div>
       } @else if (orderService.currentOrder(); as order) {
-        <div class="mb-4 flex items-center justify-between">
-          <h1 class="text-xl font-semibold">Order #{{ order.id.slice(0, 8) }}</h1>
+        <div class="mb-6 flex items-center justify-between">
+          <h1 class="font-display text-xl italic text-charcoal">Order #{{ order.id.slice(0, 8) }}</h1>
           <app-order-status-badge [status]="order.status" />
         </div>
 
         @if (order.status === 'Pending') {
-          <a class="mb-4 block text-sm text-blue-600 hover:underline" [routerLink]="['/orders', order.id, 'payment']">
+          <a class="mb-4 block text-sm text-champagne hover:underline" [routerLink]="['/orders', order.id, 'payment']">
             View payment status
           </a>
         }
