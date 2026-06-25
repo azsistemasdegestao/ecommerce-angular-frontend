@@ -53,7 +53,9 @@ export class CartService {
 
   constructor() {
     effect(() => {
-      if (!this.authService.isAuthenticated()) {
+      if (this.authService.isAuthenticated()) {
+        void this.loadCart();
+      } else {
         this.clearLocal();
       }
     });

@@ -150,6 +150,66 @@ describe('CartService', () => {
     expect(service.cart().items.length).toBe(0);
   });
 
+  it('AC-FE-CART-U-09: the cart is reloaded from the server whenever the user becomes authenticated (e.g. on page refresh or login)', async () => {
+    const authService = TestBed.inject(AuthService) as unknown as FakeAuthService;
+
+    // Initial construction already happened with isAuthenticated() === true; flushing
+    // the effect now simulates the app-initializer resolving the session on page load.
+    TestBed.flushEffects();
+    httpMock.expectOne(`${API}/api/v1/cart`).flush({
+      id: 'cart-1',
+      items: [
+        {
+          id: 'item-1',
+          product_id: 'p1',
+          product_name: 'Sneaker',
+          product_slug: 'sneaker',
+          image_url: 'https://x/img.png',
+          quantity: 2,
+          unit_price: 49.9,
+          subtotal: 99.8,
+        },
+      ],
+      total: 99.8,
+      item_count: 2,
+      updated_at: '2024-01-01T00:00:00Z',
+    });
+    await Promise.resolve();
+    expect(service.cart().items.length).toBe(1);
+
+    // Logging out clears it locally (no request needed).
+    authService.setAuthenticated(false);
+    TestBed.flushEffects();
+    expect(service.cart().items.length).toBe(0);
+
+    // Logging back in (or a fresh page load resolving the session) must re-fetch the
+    // server cart rather than leaving the in-memory cart empty.
+    authService.setAuthenticated(true);
+    TestBed.flushEffects();
+    httpMock.expectOne(`${API}/api/v1/cart`).flush({
+      id: 'cart-1',
+      items: [
+        {
+          id: 'item-1',
+          product_id: 'p1',
+          product_name: 'Sneaker',
+          product_slug: 'sneaker',
+          image_url: 'https://x/img.png',
+          quantity: 2,
+          unit_price: 49.9,
+          subtotal: 99.8,
+        },
+      ],
+      total: 99.8,
+      item_count: 2,
+      updated_at: '2024-01-01T00:00:00Z',
+    });
+    await Promise.resolve();
+
+    expect(service.cart().items.length).toBe(1);
+    expect(service.isEmpty()).toBe(false);
+  });
+
   it('AC-FE-CART-E-02: adding the same product twice increments quantity instead of duplicating', async () => {
     const firstAdd = service.addItem(PRODUCT, 1);
     httpMock.expectOne(`${API}/api/v1/cart/items`).flush({
