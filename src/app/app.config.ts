@@ -15,10 +15,14 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { ApiConfiguration, provideApiConfiguration } from './core/api/generated/api-configuration';
 import { AuthService } from './core/auth/auth.service';
 import { environment } from '../environments/environment';
+import { initBrowserTracing } from '../browser-tracing';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideAppInitializer(() => {
+      if (isPlatformBrowser(inject(PLATFORM_ID))) initBrowserTracing();
+    }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),

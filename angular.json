@@ -18,6 +18,16 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "externalDependencies": [
+              "prom-client",
+              "pino",
+              "pino-loki",
+              "pino-pretty"
+            ],
+            "allowedCommonJsDependencies": [
+              "import-in-the-middle",
+              "require-in-the-middle"
+            ],
             "assets": [
               {
                 "glob": "**/*",

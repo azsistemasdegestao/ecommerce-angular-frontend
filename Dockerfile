@@ -26,4 +26,4 @@ RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 
 EXPOSE 4000
-CMD ["node", "dist/ecommerce-frontend/server/server.mjs"]
+CMD ["node", "--import", "./dist/ecommerce-frontend/server/instrument.mjs", "dist/ecommerce-frontend/server/server.mjs"]

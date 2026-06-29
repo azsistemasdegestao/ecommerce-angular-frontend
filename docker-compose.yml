@@ -10,6 +10,10 @@ services:
       # NG_ALLOWED_HOSTS is read at runtime by @angular/ssr (SSRF guard on the
       # Host header) without needing a rebuild; extend this list per environment.
       NG_ALLOWED_HOSTS: localhost:4000,localhost
+      OTEL_SERVICE_NAME: ecommerce-frontend
+      JAEGER_ENDPOINT: http://jaeger:4317
+      JAEGER_OTLP_HTTP_ENDPOINT: http://jaeger:4318
+      LOKI_URL: http://loki:3100
     networks:
       - ecommerce-network
 

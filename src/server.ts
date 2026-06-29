@@ -6,11 +6,42 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { register } from 'prom-client';
+import { logger } from './logger.js';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+app.get('/metrics', async (_req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
+});
+
+// Forwards browser OTel spans (OTLP/HTTP) to Jaeger on the internal Docker
+// network — avoids exposing Jaeger's port publicly or dealing with CORS.
+app.post(
+  '/api/traces',
+  express.raw({ type: '*/*', limit: '1mb' }),
+  async (req, res) => {
+    const jaegerHttp =
+      process.env['JAEGER_OTLP_HTTP_ENDPOINT'] ?? 'http://localhost:4318';
+    try {
+      const upstream = await fetch(`${jaegerHttp}/v1/traces`, {
+        method: 'POST',
+        headers: {
+          'Content-Type':
+            (req.headers['content-type'] as string) ?? 'application/json',
+        },
+        body: req.body as unknown as BodyInit,
+      });
+      res.status(upstream.status).end();
+    } catch {
+      res.status(502).end();
+    }
+  },
+);
 
 /**
  * Exposes the API_BASE_URL configured for this container so the browser
@@ -55,7 +86,7 @@ if (isMainModule(import.meta.url) || process.env['pm_id']) {
       throw error;
     }
 
-    console.log(`Node Express server listening on http://localhost:${port}`);
+    logger.info({ port }, `Node Express server listening on http://localhost:${port}`);
   });
 }
 
